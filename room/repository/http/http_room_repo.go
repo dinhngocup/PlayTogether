@@ -12,11 +12,16 @@ import (
 type RoomRepositoryHandler struct {
 }
 
-func NewRoomRepository() model.RoomRepository {
+func NewHttpRoomRepository() model.RoomRepository {
 	return RoomRepositoryHandler{}
 }
 
-func (r RoomRepositoryHandler) GetByID(id int) (model.Room, error) {
+func (r RoomRepositoryHandler) CreateRoom(room model.Room) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r RoomRepositoryHandler) GetByID(id int32) (model.Room, error) {
 	requestURL := fmt.Sprintf("https://jsonplaceholder.typicode.com/users/%d", id)
 	res, err := http.Get(requestURL)
 	if res.StatusCode == http.StatusOK {
