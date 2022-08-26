@@ -2,7 +2,7 @@ package main
 
 import (
 	_roomHttpDelivery "PlayTogether/room/delivery/http"
-	_roomHttpRepository "PlayTogether/room/repository/http"
+	_roomRedisRepository "PlayTogether/room/repository/redis"
 	_roomService "PlayTogether/room/service"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
@@ -20,8 +20,9 @@ func main() {
 	router.GET("/hello/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
 	})
-	roomRepo := _roomHttpRepository.NewRoomRepository()
-	roomService := _roomService.NewRoomService(roomRepo)
+	//roomHttpRepo := _roomHttpRepository.NewHttpRoomRepository()
+	roomRedisRepo := _roomRedisRepository.NewRedisRoomRepository()
+	roomService := _roomService.NewRoomService(roomRedisRepo)
 	_roomHttpDelivery.NewRoomDelivery(router, roomService)
 
 	fmt.Printf("Starting server at port 8080\n")
