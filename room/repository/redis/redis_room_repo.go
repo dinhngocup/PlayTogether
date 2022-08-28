@@ -2,10 +2,13 @@ package redis
 
 import (
 	"PlayTogether/model"
+	_roomModelRedis "PlayTogether/model/redis"
+	_redisValueGenerator "PlayTogether/utils/redis"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis"
+	"github.com/google/uuid"
 )
 
 type RoomRepositoryHandler struct {
@@ -13,46 +16,72 @@ type RoomRepositoryHandler struct {
 }
 
 func NewRedisRoomRepository() model.RoomRepository {
-	redisclient := redis.NewClient(&redis.Options{
+	redisClient := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
 		DB:       0,
 	})
 	return RoomRepositoryHandler{
-		client: redisclient,
+		client: redisClient,
 	}
 }
 
 func (r RoomRepositoryHandler) CreateRoom(room model.Room) error {
-	json, errJson := json.Marshal(room)
-	if errJson != nil {
-		fmt.Println(errJson)
-	}
-	// check room is existed
-	_, err := r.GetByID(room.Id)
-	if err == nil {
-		fmt.Println("This room is existed.")
-		return errors.New("this room is existed")
-	}
+	roomId := uuid.Must(uuid.NewRandom()).String()
+	room.Id = roomId
 
-	result := r.client.Set(string(room.Id), json, 0).Err()
-	if result != nil {
-		fmt.Println(err)
-	}
+	// gen key for hashmap
+	roomKey := _redisValueGenerator.GenPrefixKey("room", roomId, "")
+	songKey := _redisValueGenerator.GenPrefixKey("room", roomId, "songs")
+	roomModelRedis := _roomModelRedis.ConvertRoomToModelRedis(room)
 
-	return result
+	// convert struct to map
+	var songMap map[string]interface{}
+	inrecSong, _ := json.Marshal(room.Songs)
+	json.Unmarshal(inrecSong, &songMap)
+
+	var roomMap map[string]interface{}
+	inrecRoom, _ := json.Marshal(roomModelRedis)
+	json.Unmarshal(inrecRoom, &roomMap)
+
+	r.client.HMSet(songKey, songMap)
+	createRoomResult := r.client.HMSet(roomKey, roomMap).Err()
+
+	if createRoomResult != nil {
+		println("create room failed: " + createRoomResult.Error())
+		return errors.New("create room failed")
+	}
+	return createRoomResult
 }
 
-func (r RoomRepositoryHandler) GetByID(id int32) (model.Room, error) {
-	result, _ := r.client.Get(string(id)).Result()
-	roomInfo := model.Room{}
-	err := json.Unmarshal([]byte(result), &roomInfo)
-	if err != nil {
-		fmt.Println("This room id not exists")
-		return model.Room{}, err
+func (r RoomRepositoryHandler) GetByID(id string) (model.Room, error) {
+	roomKey := _redisValueGenerator.GenPrefixKey("room", id, "")
+	mapRoom, _ := r.client.HGetAll(roomKey).Result()
+
+	songKey := _redisValueGenerator.GenPrefixKey("room", id, "songs")
+	mapSongs, _ := r.client.HGetAll(songKey).Result()
+
+	roomInfo := ConvertMapToRoom(mapRoom, mapSongs)
+	if roomInfo.Id == "" {
+		return model.Room{}, errors.New("this room id not exists")
 	}
-	fmt.Printf("Room info: %s", result)
+	fmt.Printf("Room info: %s", roomInfo)
 	return roomInfo, nil
+}
+
+func ConvertMapToRoom(mapRoom map[string]string, mapSongs map[string]string) model.Room {
+	fmt.Println(mapSongs)
+	fmt.Println(mapRoom)
+
+	return model.Room{
+		Id:      mapRoom["id"],
+		Name:    mapRoom["name"],
+		Manager: mapRoom["manager"],
+		Songs: model.SongInRoom{
+			Id:    mapSongs["id"],
+			Owner: mapSongs["owner"],
+		},
+	}
 }
 
 func (r RoomRepositoryHandler) AddMember(member *model.User) error {

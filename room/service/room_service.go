@@ -18,7 +18,7 @@ func (r RoomServiceHandler) CreateRoom(room model.Room) error {
 	return r.roomRepo.CreateRoom(room)
 }
 
-func (r RoomServiceHandler) GetByID(id int32) (model.Room, error) {
+func (r RoomServiceHandler) GetByID(id string) (model.Room, error) {
 	return r.roomRepo.GetByID(id)
 }
 

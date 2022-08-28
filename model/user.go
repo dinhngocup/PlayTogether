@@ -7,11 +7,13 @@ type User struct {
 }
 
 // UserUsecase represent the User's usecases
-type UserUsecase interface {
-	GetByID(id string) (Room, error)
+type UserService interface {
+	GetByID(id string) (User, error)
+	CreateUser(user User) error
 }
 
 // UserRepository represent the User's repository contract
 type UserRepository interface {
-	GetByID(id string) (Room, error)
+	GetByID(id string) (User, error)
+	CreateUser(user User) error
 }
