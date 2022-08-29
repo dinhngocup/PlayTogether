@@ -12,16 +12,26 @@ import (
 type RoomRepositoryHandler struct {
 }
 
-func NewHttpRoomRepository() model.RoomRepository {
-	return RoomRepositoryHandler{}
-}
-
-func (r RoomRepositoryHandler) CreateRoom(room model.Room) error {
+func (r *RoomRepositoryHandler) JoinRoom(request model.JoinRoomRequest) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r RoomRepositoryHandler) GetByID(id string) (model.Room, error) {
+func (r *RoomRepositoryHandler) LeaveRoom(request model.LeaveRoomRequest) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func NewHttpRoomRepository() model.RoomRepository {
+	return &RoomRepositoryHandler{}
+}
+
+func (r *RoomRepositoryHandler) CreateRoom(room model.Room) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r *RoomRepositoryHandler) GetByID(id string) (model.Room, error) {
 	requestURL := fmt.Sprintf("https://jsonplaceholder.typicode.com/users/%d", id)
 	res, err := http.Get(requestURL)
 	if res.StatusCode == http.StatusOK {
@@ -36,14 +46,4 @@ func (r RoomRepositoryHandler) GetByID(id string) (model.Room, error) {
 	} else {
 		return model.Room{}, err
 	}
-}
-
-func (r RoomRepositoryHandler) AddMember(member *model.User) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r RoomRepositoryHandler) RemoveMember(userId string) error {
-	//TODO implement me
-	panic("implement me")
 }

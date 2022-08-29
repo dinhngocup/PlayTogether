@@ -24,7 +24,6 @@ func NewRoomDelivery(router *httprouter.Router, roomService model.RoomService) {
 	router.GET("/rooms/:id", handler.GetByID)
 	router.POST("/rooms", handler.CreateRoom)
 	router.POST("/rooms/join", handler.JoinRoom)
-	router.POST("/rooms/leave", handler.JoinRoom)
 }
 
 // GetByID will get room information by given id

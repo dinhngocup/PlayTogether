@@ -8,7 +8,7 @@ type RoomServiceHandler struct {
 	roomRepo model.RoomRepository
 }
 
-func (r RoomServiceHandler) LeaveRoom(request model.LeaveRoomRequest) error {
+func (r *RoomServiceHandler) LeaveRoom(request model.LeaveRoomRequest) error {
 	//TODO implement me
 	panic("implement me")
 }
@@ -29,14 +29,4 @@ func (r *RoomServiceHandler) CreateRoom(room model.Room) error {
 
 func (r *RoomServiceHandler) GetByID(id string) (model.Room, error) {
 	return r.roomRepo.GetByID(id)
-}
-
-func (r *RoomServiceHandler) AddMember(member model.User) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r *RoomServiceHandler) RemoveMember(userId string) error {
-	//TODO implement me
-	panic("implement me")
 }

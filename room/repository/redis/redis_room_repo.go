@@ -14,7 +14,7 @@ type RoomRepositoryHandler struct {
 	client *redis.Client
 }
 
-func (r RoomRepositoryHandler) LeaveRoom(request model.LeaveRoomRequest) error {
+func (r *RoomRepositoryHandler) LeaveRoom(request model.LeaveRoomRequest) error {
 	//TODO implement me
 	panic("implement me")
 }
@@ -104,14 +104,4 @@ func ConvertMapToRoom(mapRoom map[string]string, listSongs []string, listMembers
 		Songs:   songs,
 		Members: listMembers,
 	}
-}
-
-func (r *RoomRepositoryHandler) AddMember(member *model.User) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r *RoomRepositoryHandler) RemoveMember(userId string) error {
-	//TODO implement me
-	panic("implement me")
 }

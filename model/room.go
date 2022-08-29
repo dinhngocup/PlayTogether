@@ -12,8 +12,6 @@ type Room struct {
 // RoomService represent the Room's services
 type RoomService interface {
 	GetByID(id string) (Room, error)
-	AddMember(member User) error
-	RemoveMember(userId string) error
 	CreateRoom(room Room) error
 	JoinRoom(request JoinRoomRequest) error
 	LeaveRoom(request LeaveRoomRequest) error
@@ -22,8 +20,6 @@ type RoomService interface {
 // RoomRepository represent the Room's repository contract
 type RoomRepository interface {
 	GetByID(id string) (Room, error)
-	AddMember(member *User) error
-	RemoveMember(userId string) error
 	CreateRoom(room Room) error
 	JoinRoom(request JoinRoomRequest) error
 	LeaveRoom(request LeaveRoomRequest) error
