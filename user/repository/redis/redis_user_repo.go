@@ -18,12 +18,12 @@ func NewRedisUserRepository() model.UserRepository {
 		Password: "",
 		DB:       0,
 	})
-	return UserRepositoryHandler{
+	return &UserRepositoryHandler{
 		client: redisClient,
 	}
 }
 
-func (u UserRepositoryHandler) GetByID(id string) (model.User, error) {
+func (u *UserRepositoryHandler) GetByID(id string) (model.User, error) {
 	userKey := _redisValueGenerator.GenPrefixKey("user", id, "")
 	mapUser, _ := u.client.HGetAll(userKey).Result()
 
@@ -38,7 +38,7 @@ func (u UserRepositoryHandler) GetByID(id string) (model.User, error) {
 	return userInfo, nil
 }
 
-func (u UserRepositoryHandler) CreateUser(user model.User) error {
+func (u *UserRepositoryHandler) CreateUser(user model.User) error {
 	_, err := u.GetByID(user.Id)
 
 	if err == nil {

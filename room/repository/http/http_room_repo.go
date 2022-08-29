@@ -21,7 +21,7 @@ func (r RoomRepositoryHandler) CreateRoom(room model.Room) error {
 	panic("implement me")
 }
 
-func (r RoomRepositoryHandler) GetByID(id int32) (model.Room, error) {
+func (r RoomRepositoryHandler) GetByID(id string) (model.Room, error) {
 	requestURL := fmt.Sprintf("https://jsonplaceholder.typicode.com/users/%d", id)
 	res, err := http.Get(requestURL)
 	if res.StatusCode == http.StatusOK {

@@ -2,8 +2,9 @@ package model
 
 // User Model
 type User struct {
-	Id   string
-	Name string
+	Id     string
+	Name   string
+	Avatar string
 }
 
 // UserUsecase represent the User's usecases

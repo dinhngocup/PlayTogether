@@ -16,7 +16,7 @@ type UserHandler struct {
 }
 
 func NewUserDelivery(router *httprouter.Router, userService model.UserService) {
-	handler := UserHandler{
+	handler := &UserHandler{
 		userService: userService,
 	}
 	log.Println("call user apis")
