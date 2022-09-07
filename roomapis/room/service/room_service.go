@@ -8,6 +8,11 @@ type RoomServiceHandler struct {
 	roomRepo model.RoomRepository
 }
 
+func (r *RoomServiceHandler) AddSong(song []model.Song, roomId string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (r *RoomServiceHandler) LeaveRoom(request model.LeaveRoomRequest) error {
 	//TODO implement me
 	panic("implement me")

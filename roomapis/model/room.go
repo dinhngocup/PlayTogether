@@ -15,6 +15,7 @@ type RoomService interface {
 	CreateRoom(room Room) error
 	JoinRoom(request JoinRoomRequest) error
 	LeaveRoom(request LeaveRoomRequest) error
+	AddSong(song []Song, roomId string) error
 }
 
 // RoomRepository represent the Room's repository contract

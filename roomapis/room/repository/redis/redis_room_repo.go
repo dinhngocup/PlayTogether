@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"PlayTogether/model"
+	model "PlayTogether/model"
 	_roomModelRedis "PlayTogether/model/redis"
 	_redisValueGenerator "PlayTogether/utils/redis"
 	"encoding/json"
@@ -14,9 +14,22 @@ type RoomRepositoryHandler struct {
 	client *redis.Client
 }
 
-func (r *RoomRepositoryHandler) LeaveRoom(request model.LeaveRoomRequest) error {
-	//TODO implement me
-	panic("implement me")
+func (r *RoomRepositoryHandler) AddSong(songs []model.Song, roomId string) error {
+	existedRoom, err := r.GetByID(roomId)
+	if existedRoom.Id == "" {
+		return err
+	}
+	roomKey := _redisValueGenerator.GenPrefixKey("room", roomId, "")
+	songsKey := _redisValueGenerator.GenPrefixKey("room", roomId, "songs")
+	var listSongs []string
+
+	for _, song := range songs {
+		json, _ := json.Marshal(song)
+		listSongs = append(listSongs, string(json))
+	}
+
+	r.client.SAdd(songsKey, listSongs)
+	return r.client.HSet(roomKey, "members", songsKey).Err()
 }
 
 func NewRedisRoomRepository() model.RoomRepository {
@@ -28,6 +41,16 @@ func NewRedisRoomRepository() model.RoomRepository {
 	return &RoomRepositoryHandler{
 		client: redisClient,
 	}
+}
+
+func (r *RoomRepositoryHandler) LeaveRoom(request model.LeaveRoomRequest) error {
+	existedRoom, err := r.GetByID(request.RoomId)
+	if existedRoom.Id == "" {
+		return err
+	}
+	//roomKey := _redisValueGenerator.GenPrefixKey("room", request.RoomId, "")
+	membersKey := _redisValueGenerator.GenPrefixKey("room", request.RoomId, "members")
+	return r.client.SRem(membersKey, request.UserId).Err()
 }
 
 func (r *RoomRepositoryHandler) JoinRoom(request model.JoinRoomRequest) error {
@@ -47,7 +70,6 @@ func (r *RoomRepositoryHandler) CreateRoom(room model.Room) error {
 
 	// gen key for hashmap
 	roomKey := _redisValueGenerator.GenPrefixKey("room", roomId, "")
-	songKey := _redisValueGenerator.GenPrefixKey("room", roomId, "songs")
 	roomModelRedis := _roomModelRedis.ConvertRoomToModelRedis(room)
 
 	// convert struct to map
@@ -55,14 +77,8 @@ func (r *RoomRepositoryHandler) CreateRoom(room model.Room) error {
 	inrecRoom, _ := json.Marshal(roomModelRedis)
 	json.Unmarshal(inrecRoom, &roomMap)
 
-	var listSongs []string
+	r.AddSong(room.Songs, room.Id)
 
-	for _, song := range room.Songs {
-		json, _ := json.Marshal(song)
-		listSongs = append(listSongs, string(json))
-	}
-
-	r.client.SAdd(songKey, listSongs)
 	createRoomResult := r.client.HMSet(roomKey, roomMap).Err()
 
 	if createRoomResult != nil {

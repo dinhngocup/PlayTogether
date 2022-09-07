@@ -24,6 +24,7 @@ func NewRoomDelivery(router *httprouter.Router, roomService model.RoomService) {
 	router.GET("/rooms/:id", handler.GetByID)
 	router.POST("/rooms", handler.CreateRoom)
 	router.POST("/rooms/join", handler.JoinRoom)
+	router.POST("/rooms/leave", handler.LeaveRoom)
 }
 
 // GetByID will get room information by given id
@@ -69,6 +70,23 @@ func (roomHandler *RoomHandler) JoinRoom(w http.ResponseWriter, r *http.Request,
 	joinRoomRequest := model.JoinRoomRequest{}
 	json.Unmarshal([]byte(body), &joinRoomRequest)
 	err := roomHandler.roomService.JoinRoom(joinRoomRequest)
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
+// LeaveRoom will remove user from an existed room
+func (roomHandler *RoomHandler) LeaveRoom(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	body := buf.String()
+	leaveRoomRequest := model.LeaveRoomRequest{}
+	json.Unmarshal([]byte(body), &leaveRoomRequest)
+	err := roomHandler.roomService.LeaveRoom(leaveRoomRequest)
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
