@@ -1,37 +1,37 @@
 package service
 
 import (
-	"PlayTogether/model"
+	model2 "PlayTogether/roomapis/model"
 )
 
 type RoomServiceHandler struct {
-	roomRepo model.RoomRepository
+	roomRepo model2.RoomRepository
 }
 
-func (r *RoomServiceHandler) AddSong(song []model.Song, roomId string) error {
+func (r *RoomServiceHandler) AddSong(song []model2.Song, roomId string) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r *RoomServiceHandler) LeaveRoom(request model.LeaveRoomRequest) error {
+func (r *RoomServiceHandler) LeaveRoom(request model2.LeaveRoomRequest) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func NewRoomService(roomRepo model.RoomRepository) model.RoomService {
+func NewRoomService(roomRepo model2.RoomRepository) model2.RoomService {
 	return &RoomServiceHandler{
 		roomRepo: roomRepo,
 	}
 }
 
-func (r *RoomServiceHandler) JoinRoom(request model.JoinRoomRequest) error {
+func (r *RoomServiceHandler) JoinRoom(request model2.JoinRoomRequest) error {
 	return r.roomRepo.JoinRoom(request)
 }
 
-func (r *RoomServiceHandler) CreateRoom(room model.Room) error {
+func (r *RoomServiceHandler) CreateRoom(room model2.Room) error {
 	return r.roomRepo.CreateRoom(room)
 }
 
-func (r *RoomServiceHandler) GetByID(id string) (model.Room, error) {
+func (r *RoomServiceHandler) GetByID(id string) (model2.Room, error) {
 	return r.roomRepo.GetByID(id)
 }

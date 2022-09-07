@@ -1,13 +1,13 @@
 package main
 
 import (
-	_roomHttpDelivery "PlayTogether/room/delivery/http"
-	_roomRedisRepository "PlayTogether/room/repository/redis"
-	_roomService "PlayTogether/room/service"
+	_roomHttpDelivery "PlayTogether/roomapis/room/delivery/http"
+	_roomRedisRepository "PlayTogether/roomapis/room/repository/redis"
+	_roomService "PlayTogether/roomapis/room/service"
+	_userHttpDelivery "PlayTogether/roomapis/user/delivery/http"
+	_userRedisRepository "PlayTogether/roomapis/user/repository/redis"
+	_userService "PlayTogether/roomapis/user/service"
 
-	_userHttpDelivery "PlayTogether/user/delivery/http"
-	_userRedisRepository "PlayTogether/user/repository/redis"
-	_userService "PlayTogether/user/service"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"log"

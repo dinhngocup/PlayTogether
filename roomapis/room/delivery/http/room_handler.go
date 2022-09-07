@@ -1,7 +1,7 @@
 package http
 
 import (
-	"PlayTogether/model"
+	model2 "PlayTogether/roomapis/model"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -12,10 +12,10 @@ import (
 
 // RoomHandler  represent the http handler for room
 type RoomHandler struct {
-	roomService model.RoomService
+	roomService model2.RoomService
 }
 
-func NewRoomDelivery(router *httprouter.Router, roomService model.RoomService) {
+func NewRoomDelivery(router *httprouter.Router, roomService model2.RoomService) {
 	handler := &RoomHandler{
 		roomService: roomService,
 	}
@@ -50,7 +50,7 @@ func (roomHandler *RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Reques
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
 	body := buf.String()
-	newRoom := model.Room{}
+	newRoom := model2.Room{}
 	json.Unmarshal([]byte(body), &newRoom)
 	err := roomHandler.roomService.CreateRoom(newRoom)
 
@@ -67,7 +67,7 @@ func (roomHandler *RoomHandler) JoinRoom(w http.ResponseWriter, r *http.Request,
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
 	body := buf.String()
-	joinRoomRequest := model.JoinRoomRequest{}
+	joinRoomRequest := model2.JoinRoomRequest{}
 	json.Unmarshal([]byte(body), &joinRoomRequest)
 	err := roomHandler.roomService.JoinRoom(joinRoomRequest)
 
@@ -84,7 +84,7 @@ func (roomHandler *RoomHandler) LeaveRoom(w http.ResponseWriter, r *http.Request
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
 	body := buf.String()
-	leaveRoomRequest := model.LeaveRoomRequest{}
+	leaveRoomRequest := model2.LeaveRoomRequest{}
 	json.Unmarshal([]byte(body), &leaveRoomRequest)
 	err := roomHandler.roomService.LeaveRoom(leaveRoomRequest)
 

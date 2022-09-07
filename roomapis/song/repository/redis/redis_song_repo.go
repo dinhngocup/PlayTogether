@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"PlayTogether/model"
+	"PlayTogether/roomapis/model"
 	"github.com/go-redis/redis"
 )
 

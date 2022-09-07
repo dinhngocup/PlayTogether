@@ -1,9 +1,9 @@
 package redis
 
 import (
-	model "PlayTogether/model"
-	_roomModelRedis "PlayTogether/model/redis"
-	_redisValueGenerator "PlayTogether/utils/redis"
+	model2 "PlayTogether/roomapis/model"
+	_roomModelRedis "PlayTogether/roomapis/model/redis"
+	_redisValueGenerator "PlayTogether/roomapis/utils/redis"
 	"encoding/json"
 	"errors"
 	"github.com/go-redis/redis"
@@ -14,7 +14,7 @@ type RoomRepositoryHandler struct {
 	client *redis.Client
 }
 
-func (r *RoomRepositoryHandler) AddSong(songs []model.Song, roomId string) error {
+func (r *RoomRepositoryHandler) AddSong(songs []model2.Song, roomId string) error {
 	existedRoom, err := r.GetByID(roomId)
 	if existedRoom.Id == "" {
 		return err
@@ -32,7 +32,7 @@ func (r *RoomRepositoryHandler) AddSong(songs []model.Song, roomId string) error
 	return r.client.HSet(roomKey, "members", songsKey).Err()
 }
 
-func NewRedisRoomRepository() model.RoomRepository {
+func NewRedisRoomRepository() model2.RoomRepository {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
@@ -43,7 +43,7 @@ func NewRedisRoomRepository() model.RoomRepository {
 	}
 }
 
-func (r *RoomRepositoryHandler) LeaveRoom(request model.LeaveRoomRequest) error {
+func (r *RoomRepositoryHandler) LeaveRoom(request model2.LeaveRoomRequest) error {
 	existedRoom, err := r.GetByID(request.RoomId)
 	if existedRoom.Id == "" {
 		return err
@@ -53,7 +53,7 @@ func (r *RoomRepositoryHandler) LeaveRoom(request model.LeaveRoomRequest) error 
 	return r.client.SRem(membersKey, request.UserId).Err()
 }
 
-func (r *RoomRepositoryHandler) JoinRoom(request model.JoinRoomRequest) error {
+func (r *RoomRepositoryHandler) JoinRoom(request model2.JoinRoomRequest) error {
 	existedRoom, err := r.GetByID(request.RoomId)
 	if existedRoom.Id == "" {
 		return err
@@ -64,7 +64,7 @@ func (r *RoomRepositoryHandler) JoinRoom(request model.JoinRoomRequest) error {
 	return r.client.SAdd(membersKey, request.UserId).Err()
 }
 
-func (r *RoomRepositoryHandler) CreateRoom(room model.Room) error {
+func (r *RoomRepositoryHandler) CreateRoom(room model2.Room) error {
 	roomId := uuid.Must(uuid.NewRandom()).String()
 	room.Id = roomId
 
@@ -88,7 +88,7 @@ func (r *RoomRepositoryHandler) CreateRoom(room model.Room) error {
 	return createRoomResult
 }
 
-func (r *RoomRepositoryHandler) GetByID(id string) (model.Room, error) {
+func (r *RoomRepositoryHandler) GetByID(id string) (model2.Room, error) {
 	roomKey := _redisValueGenerator.GenPrefixKey("room", id, "")
 	mapRoom, _ := r.client.HGetAll(roomKey).Result()
 
@@ -100,20 +100,20 @@ func (r *RoomRepositoryHandler) GetByID(id string) (model.Room, error) {
 
 	roomInfo := ConvertMapToRoom(mapRoom, listSongs, listMembers)
 	if roomInfo.Id == "" {
-		return model.Room{}, errors.New("this room id not exists")
+		return model2.Room{}, errors.New("this room id not exists")
 	}
 	return roomInfo, nil
 }
 
-func ConvertMapToRoom(mapRoom map[string]string, listSongs []string, listMembers []string) model.Room {
-	var songs []model.Song
+func ConvertMapToRoom(mapRoom map[string]string, listSongs []string, listMembers []string) model2.Room {
+	var songs []model2.Song
 	for _, song := range listSongs {
-		songInfo := model.Song{}
+		songInfo := model2.Song{}
 		json.Unmarshal([]byte(song), &songInfo)
 		songs = append(songs, songInfo)
 	}
 
-	return model.Room{
+	return model2.Room{
 		Id:      mapRoom["id"],
 		Name:    mapRoom["name"],
 		Manager: mapRoom["manager"],

@@ -1,8 +1,8 @@
 package redis
 
 import (
-	"PlayTogether/model"
-	_redisValueGenerator "PlayTogether/utils/redis"
+	"PlayTogether/roomapis/model"
+	_redisValueGenerator "PlayTogether/roomapis/utils/redis"
 )
 
 // Room Redis Model

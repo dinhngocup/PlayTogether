@@ -1,7 +1,7 @@
 package service
 
 import (
-	"PlayTogether/model"
+	"PlayTogether/roomapis/model"
 )
 
 type UserServiceHandler struct {
