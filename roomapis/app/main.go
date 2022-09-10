@@ -17,15 +17,6 @@ import (
 func main() {
 	router := httprouter.New()
 
-	router.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		fmt.Fprint(w, "Welcome!\n")
-	})
-
-	router.GET("/hello/:name", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
-	})
-	//roomHttpRepo := _roomHttpRepository.NewHttpRoomRepository()
-
 	roomRedisRepo := _roomRedisRepository.NewRedisRoomRepository()
 	roomService := _roomService.NewRoomService(roomRedisRepo)
 	_roomHttpDelivery.NewRoomDelivery(router, roomService)
