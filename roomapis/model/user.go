@@ -13,7 +13,7 @@ type UserService interface {
 	CreateUser(user User) error
 }
 
-// UserRepository represent the User's repository contract
+// UserRepository represent the User's service contract
 type UserRepository interface {
 	GetByID(id string) (User, error)
 	CreateUser(user User) error

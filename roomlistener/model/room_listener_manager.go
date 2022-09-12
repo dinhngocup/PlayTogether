@@ -5,20 +5,12 @@ type RoomListenerManager struct {
 	RoomListeners map[string]*RoomListener
 }
 
-type RoomListenerService interface {
-	//GetRoomListener(id string) (RoomListener, error)
-	RegisterConnection(roomListenerId string, client *Client)
-	//UnregisterConnection(roomListenerId string, client *Client)
-	BroadcastData(roomListenerId string, client *Client)
-	ReadData(client *Client)
-	RunAllRoomListeners()
+func NewRoomListenerManager() *RoomListenerManager {
+	return &RoomListenerManager{
+		RoomListeners: make(map[string]*RoomListener),
+	}
 }
 
-type RoomListenerRepository interface {
-	//GetRoomListener(id string) (RoomListener, error)
-	RegisterConnection(roomListenerId string, client *Client)
-	//UnregisterConnection(roomListenerId string, client *Client)
-	BroadcastData(roomListenerId string, client *Client)
-	ReadData(client *Client)
-	RunAllRoomListeners()
+type RoomListenerManagerService interface {
+	GetRoomListener(roomListenerId string) *RoomListener
 }

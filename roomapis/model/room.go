@@ -18,7 +18,7 @@ type RoomService interface {
 	AddSong(song []Song, roomId string) error
 }
 
-// RoomRepository represent the Room's repository contract
+// RoomRepository represent the Room's service contract
 type RoomRepository interface {
 	GetByID(id string) (Room, error)
 	CreateRoom(room Room) error

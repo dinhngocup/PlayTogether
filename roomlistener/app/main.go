@@ -3,7 +3,6 @@ package main
 import (
 	_client "PlayTogether/roomlistener/client"
 	_model "PlayTogether/roomlistener/model"
-	_room_listener_manager_repo "PlayTogether/roomlistener/roomlistenermanager/repository"
 	_room_listener_manager_service "PlayTogether/roomlistener/roomlistenermanager/service"
 	"flag"
 	"fmt"
@@ -15,11 +14,8 @@ var addr = flag.String("addr", "localhost:8080", "http service address")
 
 func main() {
 	flag.Parse()
-	roomListenerManager := &_model.RoomListenerManager{
-		RoomListeners: make(map[string]*_model.RoomListener),
-	}
-	roomListenerManagerRepo := _room_listener_manager_repo.NewRoomListenerManagerRepository(roomListenerManager)
-	roomListenerManagerService := _room_listener_manager_service.NewRoomListenerManagerService(roomListenerManagerRepo)
+	roomListenerManager := _model.NewRoomListenerManager()
+	roomListenerManagerService := _room_listener_manager_service.NewRoomListenerManagerService(roomListenerManager)
 
 	clientService := _client.NewClientService()
 
@@ -27,9 +23,10 @@ func main() {
 		fmt.Println("GET params were:", r.URL.Query())
 		roomId := r.URL.Query().Get("roomId")
 		client := clientService.CreateClient(w, r)
-		roomListenerManagerService.RegisterConnection(roomId, client)
-		roomListenerManagerService.BroadcastData(roomId, client)
-		roomListenerManagerService.ReadData(client)
+		roomListener := roomListenerManagerService.GetRoomListener(roomId)
+		roomListener.RegisterConnection(client)
+		go roomListener.OnMessage(client)
+		go roomListener.SendDataToClient(client)
 	})
 
 	err := http.ListenAndServe(*addr, nil)
