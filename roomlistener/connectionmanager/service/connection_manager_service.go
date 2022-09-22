@@ -102,7 +102,6 @@ func (c *ConnectionManagerServiceHandler) OnMessage(connectionId string, postman
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		payload := model.SocketData{}
 		json.Unmarshal(message, &payload)
-		fmt.Println("hi:", c.connectionManager.FeatureManager)
 		c.connectionManager.FeatureManager.BroadcastMessage(payload, postmanService)
 	}
 }
