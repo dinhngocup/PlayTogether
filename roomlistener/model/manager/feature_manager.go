@@ -3,6 +3,7 @@ package manager
 import (
 	"PlayTogether/roomlistener/model"
 	"PlayTogether/roomlistener/utils"
+	"fmt"
 )
 
 // FeatureManager store map <connectionId,Client>
@@ -17,6 +18,7 @@ func NewFeatureManager() *FeatureManager {
 }
 
 func (featureManager *FeatureManager) BroadcastMessage(payload model.SocketData, postmanService model.PostmanService) {
+	fmt.Println(payload.Type)
 	switch payload.Type {
 	case utils.ROOM:
 		featureManager.roomManager.onAction(payload, postmanService)

@@ -32,12 +32,7 @@ func (r *RoomRepositoryHandler) AddSong(songs []model2.Song, roomId string) erro
 	return r.client.HSet(roomKey, "members", songsKey).Err()
 }
 
-func NewRedisRoomRepository() model2.RoomRepository {
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
+func NewRedisRoomRepository(redisClient *redis.Client) model2.RoomRepository {
 	return &RoomRepositoryHandler{
 		client: redisClient,
 	}

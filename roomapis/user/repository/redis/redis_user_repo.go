@@ -12,12 +12,7 @@ type UserRepositoryHandler struct {
 	client *redis.Client
 }
 
-func NewRedisUserRepository() model.UserRepository {
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
+func NewRedisUserRepository(redisClient *redis.Client) model.UserRepository {
 	return &UserRepositoryHandler{
 		client: redisClient,
 	}

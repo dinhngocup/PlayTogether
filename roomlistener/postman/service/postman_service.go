@@ -12,10 +12,6 @@ type PostmanServiceHandler struct {
 	connectionManagerService manager.ConnectionManagerService
 }
 
-func (p *PostmanServiceHandler) AddConnection(userId string, connectionId string) {
-	p.postman.UserConnectionMap[userId] = append(p.postman.UserConnectionMap[userId], connectionId)
-}
-
 func (p *PostmanServiceHandler) DeliverMessage(userId string, message string) {
 	connectionIds := p.postman.UserConnectionMap[userId]
 	p.connectionManagerService.SendMessage(connectionIds, message)

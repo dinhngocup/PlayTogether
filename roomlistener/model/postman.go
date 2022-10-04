@@ -14,5 +14,4 @@ func NewPostman() *Postman {
 type PostmanService interface {
 	MapUserConnection(userId string, connectionId string)
 	DeliverMessage(userId string, message string)
-	AddConnection(userId string, connectionId string)
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"PlayTogether/roomlistener/model"
 	"PlayTogether/roomlistener/model/manager"
+	_subs "PlayTogether/roomlistener/model/redis"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -14,6 +15,7 @@ import (
 
 type ConnectionManagerServiceHandler struct {
 	connectionManager *manager.ConnectionManager
+	subs              _subs.SubscriberService
 }
 
 const (
@@ -85,21 +87,27 @@ func (c *ConnectionManagerServiceHandler) SendMessage(connectionIds []string, me
 	}
 }
 
-func (c *ConnectionManagerServiceHandler) OnMessage(connectionId string, postmanService model.PostmanService) {
+func (c *ConnectionManagerServiceHandler) OnMessage(connectionId string, postmanService model.PostmanService, subsRedis _subs.SubscriberService) {
 	client := c.connectionManager.ConnectionMap[connectionId]
 	client.Connection.SetReadLimit(maxMessageSize)
 	client.Connection.SetReadDeadline(time.Now().Add(pongWait))
 	client.Connection.SetPongHandler(func(string) error { client.Connection.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	pubsub := subsRedis.SubscribeTopic("mychannel1")
 	for {
-		log.Println("Send data to room listener")
-		_, message, err := client.Connection.ReadMessage()
+		//_, message, err := client.Connection.ReadMessage()
+
+		msg, err := pubsub.ReceiveMessage()
+		if err != nil {
+			panic(err)
+		}
+
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		message := bytes.TrimSpace(bytes.Replace([]byte(msg.Payload), newline, space, -1))
 		payload := model.SocketData{}
 		json.Unmarshal(message, &payload)
 		c.connectionManager.FeatureManager.BroadcastMessage(payload, postmanService)
@@ -113,8 +121,9 @@ func (c *ConnectionManagerServiceHandler) RegisterConnection(client *model.Clien
 	return connectionId
 }
 
-func NewConnectionManagerService(connectionManager *manager.ConnectionManager) manager.ConnectionManagerService {
+func NewConnectionManagerService(connectionManager *manager.ConnectionManager, subs _subs.SubscriberService) manager.ConnectionManagerService {
 	return &ConnectionManagerServiceHandler{
 		connectionManager: connectionManager,
+		subs:              subs,
 	}
 }

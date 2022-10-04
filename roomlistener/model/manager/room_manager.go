@@ -21,6 +21,8 @@ func (roomManager *RoomManager) onAction(payload model.SocketData, postmanServic
 	switch payload.Action {
 	case utils.BROADCAST:
 		{
+
+			fmt.Println(roomManager.Rooms[payload.RoomId])
 			for _, userId := range roomManager.Rooms[payload.RoomId].Members {
 				// broadcast message to userId
 				fmt.Println(userId)
@@ -35,7 +37,7 @@ func (roomManager *RoomManager) onAction(payload model.SocketData, postmanServic
 			if !utils.Contains(roomManager.Rooms[payload.RoomId].Members, payload.UserId) {
 				roomManager.Rooms[payload.RoomId].Members = append(roomManager.Rooms[payload.RoomId].Members, payload.UserId)
 			}
-			postmanService.AddConnection(payload.UserId, payload.ConnectionId)
+			fmt.Println(roomManager.Rooms[payload.RoomId])
 		}
 
 	}

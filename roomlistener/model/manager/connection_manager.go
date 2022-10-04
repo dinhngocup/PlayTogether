@@ -1,6 +1,9 @@
 package manager
 
-import "PlayTogether/roomlistener/model"
+import (
+	"PlayTogether/roomlistener/model"
+	_subs "PlayTogether/roomlistener/model/redis"
+)
 
 // ConnectionManager store map <connectionId,Client>
 type ConnectionManager struct {
@@ -17,7 +20,7 @@ func NewConnectionManager(featureManager *FeatureManager) *ConnectionManager {
 
 type ConnectionManagerService interface {
 	RegisterConnection(client *model.Client) string
-	OnMessage(connectionId string, postmanService model.PostmanService)
+	OnMessage(connectionId string, postmanService model.PostmanService, subsRedis _subs.SubscriberService)
 	SendToClient(connectionId string)
 	SendMessage(connectionIds []string, message string)
 }

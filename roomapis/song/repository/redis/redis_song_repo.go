@@ -2,6 +2,8 @@ package redis
 
 import (
 	"PlayTogether/roomapis/model"
+	_redisValueGenerator "PlayTogether/roomapis/utils/redis"
+	"encoding/json"
 	"github.com/go-redis/redis"
 )
 
@@ -9,9 +11,18 @@ type SongRepositoryHandler struct {
 	client *redis.Client
 }
 
-func (s *SongRepositoryHandler) AddSong(song model.Song, roomId string) error {
-	//TODO implement me
-	panic("implement me")
+func (s *SongRepositoryHandler) AddSong(request model.AddSongRequest) error {
+	songsKey := _redisValueGenerator.GenPrefixKey("room", request.RoomId, "songs")
+
+	songKey := _redisValueGenerator.GenPrefixKey("room", request.RoomId, "songs")
+	listSongs, _ := s.client.SMembers(songKey).Result()
+	newSong := model.Song{
+		Id:    request.SongId,
+		Owner: request.UserId,
+	}
+	json, _ := json.Marshal(newSong)
+	listSongs = append(listSongs, string(json))
+	return s.client.SAdd(songsKey, listSongs).Err()
 }
 
 func (s *SongRepositoryHandler) RemoveSong(song model.Song, roomId string) error {
@@ -19,12 +30,7 @@ func (s *SongRepositoryHandler) RemoveSong(song model.Song, roomId string) error
 	panic("implement me")
 }
 
-func NewRedisSongRepository() model.SongRepository {
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
+func NewRedisSongRepository(redisClient *redis.Client) model.SongRepository {
 	return &SongRepositoryHandler{
 		client: redisClient,
 	}

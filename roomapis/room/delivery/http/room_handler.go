@@ -1,7 +1,9 @@
 package http
 
 import (
-	model2 "PlayTogether/roomapis/model"
+	"PlayTogether/roomapis/model"
+	"PlayTogether/roomapis/model/redis"
+	"PlayTogether/roomapis/utils"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -12,12 +14,14 @@ import (
 
 // RoomHandler  represent the http handler for room
 type RoomHandler struct {
-	roomService model2.RoomService
+	roomService model.RoomService
+	publisher   redis.PublisherService
 }
 
-func NewRoomDelivery(router *httprouter.Router, roomService model2.RoomService) {
+func NewRoomDelivery(router *httprouter.Router, roomService model.RoomService, publisher redis.PublisherService) {
 	handler := &RoomHandler{
 		roomService: roomService,
+		publisher:   publisher,
 	}
 	log.Println("call room apis")
 
@@ -50,7 +54,7 @@ func (roomHandler *RoomHandler) CreateRoom(w http.ResponseWriter, r *http.Reques
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
 	body := buf.String()
-	newRoom := model2.Room{}
+	newRoom := model.Room{}
 	json.Unmarshal([]byte(body), &newRoom)
 	err := roomHandler.roomService.CreateRoom(newRoom)
 
@@ -67,13 +71,23 @@ func (roomHandler *RoomHandler) JoinRoom(w http.ResponseWriter, r *http.Request,
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
 	body := buf.String()
-	joinRoomRequest := model2.JoinRoomRequest{}
+	joinRoomRequest := model.JoinRoomRequest{}
 	json.Unmarshal([]byte(body), &joinRoomRequest)
 	err := roomHandler.roomService.JoinRoom(joinRoomRequest)
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
+
+	pubsubPayload := model.SocketData{
+		Type:   utils.ROOM,
+		Action: utils.JOIN,
+		UserId: joinRoomRequest.UserId,
+		RoomId: joinRoomRequest.RoomId,
+		Data:   body,
+	}
+	json, err := json.Marshal(pubsubPayload)
+	roomHandler.publisher.PublishMessage("mychannel1", string(json))
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -84,7 +98,7 @@ func (roomHandler *RoomHandler) LeaveRoom(w http.ResponseWriter, r *http.Request
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r.Body)
 	body := buf.String()
-	leaveRoomRequest := model2.LeaveRoomRequest{}
+	leaveRoomRequest := model.LeaveRoomRequest{}
 	json.Unmarshal([]byte(body), &leaveRoomRequest)
 	err := roomHandler.roomService.LeaveRoom(leaveRoomRequest)
 
