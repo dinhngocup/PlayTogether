@@ -1,7 +1,7 @@
 package client
 
 import (
-	"PlayTogether/roomlistener/model"
+	"PlayTogether/model"
 	"bytes"
 	"fmt"
 	"github.com/gorilla/websocket"

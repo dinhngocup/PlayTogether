@@ -1,9 +1,9 @@
 package service
 
 import (
-	"PlayTogether/roomlistener/model"
-	"PlayTogether/roomlistener/model/manager"
-	_subs "PlayTogether/roomlistener/model/redis"
+	"PlayTogether/model"
+	"PlayTogether/model/manager"
+	_subs "PlayTogether/model/redis"
 	"bytes"
 	"encoding/json"
 	"fmt"

@@ -1,8 +1,8 @@
 package service
 
 import (
-	"PlayTogether/roomlistener/model"
-	"PlayTogether/roomlistener/model/manager"
+	"PlayTogether/model"
+	"PlayTogether/model/manager"
 )
 
 type PostmanServiceHandler struct {

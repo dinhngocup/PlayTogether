@@ -1,13 +1,13 @@
 package main
 
 import (
-	_client "PlayTogether/roomlistener/client"
-	_connection_manager_service "PlayTogether/roomlistener/connectionmanager/service"
-	_model "PlayTogether/roomlistener/model"
-	"PlayTogether/roomlistener/model/manager"
-	_postman_service "PlayTogether/roomlistener/postman/service"
-	_subscriberService "PlayTogether/roomlistener/subscriberredis"
-	"github.com/go-redis/redis"
+	_client "PlayTogether/client"
+	_connection_manager_service "PlayTogether/connectionmanager/service"
+	_model "PlayTogether/model"
+	"PlayTogether/model/manager"
+	_postman_service "PlayTogether/postman/service"
+	_subscriberService "PlayTogether/subscriberredis"
+	"github.com/go-redis/redis/v7"
 
 	"flag"
 	"fmt"

@@ -1,8 +1,8 @@
 package manager
 
 import (
-	"PlayTogether/roomlistener/model"
-	_subs "PlayTogether/roomlistener/model/redis"
+	"PlayTogether/model"
+	_subs "PlayTogether/model/redis"
 )
 
 // ConnectionManager store map <connectionId,Client>

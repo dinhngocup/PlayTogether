@@ -1,8 +1,8 @@
 package manager
 
 import (
-	"PlayTogether/roomlistener/model"
-	"PlayTogether/roomlistener/utils"
+	"PlayTogether/model"
+	"PlayTogether/utils"
 	"fmt"
 )
 

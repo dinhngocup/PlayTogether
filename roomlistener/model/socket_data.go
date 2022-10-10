@@ -1,6 +1,6 @@
 package model
 
-import "PlayTogether/roomlistener/utils"
+import "PlayTogether/utils"
 
 type SocketData struct {
 	Type         utils.TYPE   `json:"type"`

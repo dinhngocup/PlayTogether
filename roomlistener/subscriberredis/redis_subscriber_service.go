@@ -1,8 +1,8 @@
 package publishredis
 
 import (
-	_model "PlayTogether/roomlistener/model/redis"
-	"github.com/go-redis/redis"
+	_model "PlayTogether/model/redis"
+	"github.com/go-redis/redis/v7"
 )
 
 type SubscriberServiceHandler struct {
