@@ -9,12 +9,12 @@ COPY go.sum .
 
 RUN go mod download
 
-COPY *.go .
+COPY . .
 
-RUN go build -o /PlayTogether
+RUN go build -o main.go
 
 # This container exposes port 8080 to the outside world
 EXPOSE 8080
 
 # Run the executable
-CMD [ "/PlayTogether" ]
+CMD ["main"]
