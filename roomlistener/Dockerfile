@@ -4,12 +4,12 @@ FROM golang:1.19 AS build
 WORKDIR /app
 
 # Copy everything from the current directory to the PWD(Present Working Directory) inside the container
-COPY go.mod ./
-COPY go.sum ./
+COPY go.mod .
+COPY go.sum .
 
 RUN go mod download
 
-COPY *.go ./
+COPY *.go .
 
 RUN go build -o /PlayTogether
 
