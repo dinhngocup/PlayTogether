@@ -1,7 +1,7 @@
 package publishredis
 
 import (
-	_model "PlayTogether/roomapis/model/redis"
+	_model "PlayTogether/model/redis"
 	"github.com/go-redis/redis"
 )
 

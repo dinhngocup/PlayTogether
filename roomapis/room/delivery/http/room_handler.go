@@ -1,9 +1,9 @@
 package http
 
 import (
-	"PlayTogether/roomapis/model"
-	"PlayTogether/roomapis/model/redis"
-	"PlayTogether/roomapis/utils"
+	"PlayTogether/model"
+	"PlayTogether/model/redis"
+	"PlayTogether/utils"
 	"bytes"
 	"encoding/json"
 	"fmt"

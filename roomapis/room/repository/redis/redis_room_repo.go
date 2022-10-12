@@ -1,9 +1,9 @@
 package redis
 
 import (
-	model2 "PlayTogether/roomapis/model"
-	_roomModelRedis "PlayTogether/roomapis/model/redis"
-	_redisValueGenerator "PlayTogether/roomapis/utils/redis"
+	model2 "PlayTogether/model"
+	_roomModelRedis "PlayTogether/model/redis"
+	_redisValueGenerator "PlayTogether/utils/redis"
 	"encoding/json"
 	"errors"
 	"github.com/go-redis/redis"
