@@ -1,18 +1,18 @@
 package main
 
 import (
-	_roomHttpDelivery "PlayTogether/roomapis/room/delivery/http"
-	_roomRedisRepository "PlayTogether/roomapis/room/repository/redis"
-	_roomService "PlayTogether/roomapis/room/service"
+	_roomHttpDelivery "PlayTogether/room/delivery/http"
+	_roomRedisRepository "PlayTogether/room/repository/redis"
+	_roomService "PlayTogether/room/service"
 
-	_songHttpDelivery "PlayTogether/roomapis/song/delivery/http"
-	_songRedisRepository "PlayTogether/roomapis/song/repository/redis"
-	_songService "PlayTogether/roomapis/song/service"
+	_songHttpDelivery "PlayTogether/song/delivery/http"
+	_songRedisRepository "PlayTogether/song/repository/redis"
+	_songService "PlayTogether/song/service"
 
-	_publisherService "PlayTogether/roomapis/publishredis"
-	_userHttpDelivery "PlayTogether/roomapis/user/delivery/http"
-	_userRedisRepository "PlayTogether/roomapis/user/repository/redis"
-	_userService "PlayTogether/roomapis/user/service"
+	_publisherService "PlayTogether/publishredis"
+	_userHttpDelivery "PlayTogether/user/delivery/http"
+	_userRedisRepository "PlayTogether/user/repository/redis"
+	_userService "PlayTogether/user/service"
 	"github.com/go-redis/redis"
 
 	"fmt"
